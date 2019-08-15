@@ -994,6 +994,7 @@ class MMSEncoder(wsp_pdu.Encoder):
 
         # Return an unrecognised state if it couldn't be decoded
         return [status_values.get(status_value, 'Unrecognised')]
+    
     @staticmethod
     def encode_expiry_value(expiry_value):
         """
