@@ -994,3 +994,36 @@ class MMSEncoder(wsp_pdu.Encoder):
 
         # Return an unrecognised state if it couldn't be decoded
         return [status_values.get(status_value, 'Unrecognised')]
+    @staticmethod
+    def encode_expiry_value(expiry_value):
+        """
+        Encodes the expiry value for an MMS message using a relative token
+        (delta time), not an absolute token (fixed date and time)
+
+        encoding: [(total # of octets), (0x81), (# of octets in expiry value), (expiry value)]
+
+        Param: expiry_value
+        Precondition: expiry_value must be an base 10 integer representing the number
+        of seconds until the MMSC should delete an unaccepted MMS message
+        
+        Returns: Encoded expiry value
+        rtype: list of ints
+        """
+        assert type(expiry_value) == int
+
+        encoded_expiry_value = []
+        relativeToken = 129
+        hexValue = hex(expiry_value)[2:]
+        length = len(hexValue)
+
+        for x in range(length, 0, -2):
+            if x-2 < 0:
+                encoded_expiry_value.insert(0, int(hexValue[:x], 16))
+            else:
+                encoded_expiry_value.insert(0, int(hexValue[x-2:x], 16))
+
+        encoded_expiry_value.insert(0, len(encoded_expiry_value))
+        encoded_expiry_value.insert(0, relativeToken)
+        encoded_expiry_value.insert(0, len(encoded_expiry_value))
+
+        return encoded_expiry_value
