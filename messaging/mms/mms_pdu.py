@@ -691,8 +691,13 @@ class MMSEncoder(wsp_pdu.Encoder):
         # -- this needs to be added last, according [2] and [4]
         for hdr in headers_to_encode:
             if hdr != 'Content-Type':
-                message_header.extend(
-                    MMSEncoder.encode_header(hdr, headers_to_encode[hdr]))
+                if hdr == 'To':
+                    for client in range(0, len(headers_to_encode[hdr])):
+                        message_header.extend(
+                                MMSEncoder.encode_header(hdr, headers_to_encode[hdr][client]))
+                else:
+                    message_header.extend(
+                        MMSEncoder.encode_header(hdr, headers_to_encode[hdr]))
 
         # Ok, now only "Content-type" should be left
         content_type, ct_parameters = headers_to_encode['Content-Type']
