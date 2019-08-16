@@ -36,6 +36,7 @@ class MMSMessage:
             'Message-Type': 'm-send-req',
             'Transaction-Id': '1234',
             'MMS-Version': '1.0',
+            'Expiry': 3600
             'Content-Type': ('application/vnd.wap.multipart.mixed', {}),
         }
         self.width = 176
